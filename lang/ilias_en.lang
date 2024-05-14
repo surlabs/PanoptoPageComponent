@@ -1,0 +1,10 @@
+cmd_insert#:#Insert External Video
+modal_title_browse_and_embed#:#Choose videos for the page editor
+msg_choose_videos#:#Click "Add Videos" and choose one or multiple videos to add them to the page editor.
+msg_success#:#Changes saved successfully.
+msg_no_video#:#Please choose at least one video before creating.
+video_form_title#:#Insert External Video
+height#:#Height
+width#:#Width
+max_width#:#Max. width in %
+choose_videos#:#Add Videos

@@ -1,0 +1,10 @@
+cmd_insert#:#Video aus Panopto einfügen
+modal_title_browse_and_embed#:#Videos für den Seiteneditor auswählen
+msg_choose_videos#:#Klicken Sie auf "Videos aus Panopto auswählen" und wählen Sie eines oder mehrere Videos aus, um diese dem Seiteneditor hinzuzufügen.
+msg_success#:#Änderungen erfolgreich gespeichert.
+msg_no_video#:#Bitte wählen Sie vor dem Erstellen mindestens ein Video aus.
+video_form_title#:#Video aus Panopto einfügen
+height#:#Höhe
+width#:#Breite
+max_width#:#Maximale Breite in %
+choose_videos#:#Videos aus Panopto auswählen

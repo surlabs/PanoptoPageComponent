@@ -1,0 +1,8 @@
+.ppco_iframe_container {
+    position: relative;
+}
+.ppco_iframe_container::after {
+    display: block;
+    content: "";
+    padding-bottom: 56.25%;
+}
