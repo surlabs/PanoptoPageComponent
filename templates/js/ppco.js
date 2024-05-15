@@ -29,7 +29,7 @@ $(document).ready(function () {
     let iframe = $('#xpan_iframe'),
         iframe_src = iframe.attr('src'),
         servername = iframe_src.substr(0, iframe_src.indexOf('/Panopto/Pages/Sessions/EmbeddedUpload.aspx')),
-        insert_button = $('#xpan_insert'),
+        insert_button = $('.btn-primary[aria-label="insert"]'),
         eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent',
         eventEnter = window[eventMethod],
         messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message',
@@ -38,9 +38,21 @@ $(document).ready(function () {
     //Hide insert button initially, until a video is selected
     insert_button.prop('disabled', true);
 
+
     // Listen to message from child iframe
     eventEnter(messageEvent, function (e) {
-        console.log(e);
+        // console.log(e);
+
+        //Comprobamos si e.data es JSON y si no lo se, lo parseamos:
+        try {
+            e.data = JSON.parse(e.data);
+        }
+        catch (e) {
+            return;
+        }
+
+        console.log()
+
         let message = JSON.parse(e.data),
             thumbnailChunk = '',
             idChunk = '',
@@ -78,15 +90,17 @@ $(document).ready(function () {
                 embedString = "<iframe class='xpan_form_element' id='iframe_"+i+"' src='" + servername + "/Panopto/Pages/Embed.aspx" +
                     idChunk + "&v=1' width='450' height='256' frameborder='0' allowfullscreen></iframe>";
 
+                console.log(get_new_form_groups(ids[i], i, embedString, isPlaylist), choose_videos_link);
+
                 // add new form elements (iframe + max_width)
                 $(get_new_form_groups(ids[i], i, embedString, isPlaylist)).insertAfter(choose_videos_link);
             }
-            $('#xpan_modal').modal('hide')
+            $('#ilContentContainer .modal').modal('hide')
         }
     }, false);
 
     insert_button.click(function () {
-        var win = document.getElementById('xpan_iframe').contentWindow,
+        let win = document.getElementById('xpan_iframe').contentWindow,
             message = {
                 cmd: 'createEmbeddedFrame'
             };

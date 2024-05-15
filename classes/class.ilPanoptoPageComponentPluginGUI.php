@@ -18,19 +18,21 @@ declare(strict_types=1);
  * info@surlabs.es
  *
  */
+//require_once __DIR__ . '/../vendor/autoload.php';
 
+use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
 use connection\PanoptoLTIHandler;
 use League\OAuth1\Client as OAuth1;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 
-//require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
  * Class UserContentMainUI
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  * @ilCtrl_isCalledBy ilPanoptoPageComponentPluginGUI: ilPCPluggedGUI
+ * @ilCtrl_Calls      ilPanoptoPageComponentPluginGUI: ilObjRootFolderGUI
  */
 class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
@@ -52,10 +54,15 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
      */
     protected PanoptoClient $client;
 
+    /**
+     * @var UploadVideoGUI
+     */
+    protected UploadVideoGUI $uploadVideoGUI;
 
 
     /**
      * ilPanoptoPageComponentPluginGUI constructor.
+     * @throws ilCtrlException
      */
     public function __construct() {
         parent::__construct();
@@ -64,12 +71,13 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilPanoptoPageComponentPlugin::getInstance();
         $this->client = PanoptoClient::getInstance();
+        $this->uploadVideoGUI = new UploadVideoGUI();
+
     }
 
     public function executeCommand(): void
     {
         try {
-            $next_class = $this->ctrl->getNextClass();
             $cmd = $this->ctrl->getCmd();
             $this->$cmd();
 
@@ -81,6 +89,8 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
     /**
      * @throws PanoptoException
+     * @throws ilCtrlException
+     * @throws Exception
      */
     public function insert(): void
     {
@@ -90,13 +100,18 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $messageBox = $f->messageBox()->success($this->pl->txt("msg_choose_videos"));
         $renderer = $DIC->ui()->renderer();
         $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/ppco.js');
-        $form = new ppcoVideoFormGUI($this);
-        $this->tpl->setContent($renderer->render($messageBox) . $this->getModal() . $form->getHTML());
+        $form = $this->uploadVideoGUI->render($this);
+        $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
+
+        $this->tpl->setContent($renderer->render($messageBox) . $this->getModal() . $renderer->render($form));
     }
 
+    /**
+     * @throws ilCtrlException
+     */
     public function edit(): void
     {
-        $form = new ppcoVideoFormGUI($this, $this->getProperties());
+//        $form = new ppcoVideoFormGUI($this, $this->getProperties());
         $this->tpl->setContent($form->getHTML());
     }
 
@@ -134,6 +149,8 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
      */
     public function getElementHTML(string $a_mode, array $a_properties, string $plugin_version): string
     {
+        global $DIC;
+
         try {
             if ($a_properties['is_playlist']) {
                 $this->client->grantViewerAccessToPlaylistFolder($a_properties['id']);
@@ -144,27 +161,23 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
             // exception could mean that the session was deleted. The embed player will display an appropriate message
 //            xpanLog::getInstance()->logError($e->getCode(), 'Could not grant viewer access: ' . $e->getMessage());
         }
-//        $html = $this->launch();
-        $html = PanoptoLTIHandler::launchToolPageComponent();
 
+        $return = "<div class='ppco_iframe_container_".$a_properties['id']."' style='width:" . $a_properties['max_width'] . "%; height: 'max-content';></div>";
 
         if (!isset($a_properties['max_width'])) { // legacy
             $size_props = "width:" . $a_properties['width'] . "px; height:" . $a_properties['height'] . "px;";
-            return "<div class='ppco_iframe_container' style='" . $size_props . "'>" . $html.
-                "<iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?"
-                . ($a_properties['is_playlist'] ? "p" : "") . "id=" . $a_properties['id']
-                . "&v=1' frameborder='0' allowfullscreen style='width:100%;height:100%'></iframe></div>";
+            $return = "<div class='ppco_iframe_container' style='" . $size_props . "'></div>";
         }
 
-        return "<div class='ppco_iframe_container' style='width:" . $a_properties['max_width'] . "%'>" . $html .
-            "<iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?"
-            . ($a_properties['is_playlist'] ? "p" : "") . "id=" . $a_properties['id']
-            . "&v=1' frameborder='0' allowfullscreen style='width:100%;height:100%;position:absolute'></iframe></div>";
+        $DIC->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/js/launcher.js');
+        $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
+        $DIC->ui()->mainTemplate()->addOnLoadCode('addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
+        $DIC->ui()->mainTemplate()->addOnLoadCode('addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", '.$a_properties['is_playlist'].')' );
+
+
+        return $return;
     }
 
-    /**
-     * @throws ilCtrlException
-     */
     public function cancel(): void
     {
         $this->returnToParent();
@@ -202,8 +215,8 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $factory = $DIC->ui()->factory();
         $renderer = $DIC->ui()->renderer();
         $url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/Pages/Sessions/EmbeddedUpload.aspx?playlistsEnabled=true';
-        $message = $factory->legacy('<iframe id="xpan_iframe" src="'.$url.'"></iframe>');
-        $modal = $factory->modal()->roundtrip('', $message);
+        $message = $factory->legacy('<iframe id="xpan_iframe" style="background-size: contain;width: 100%;height: 500px;border: unset;" src="'.$url.'"></iframe>');
+        $modal = $factory->modal()->roundtrip('', $message)->withActionButtons([$factory->button()->primary($this->pl->txt('choose_videos'), "#")->withAriaLabel('insert')]);
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
 
         return $renderer->render($modal);

@@ -19,14 +19,20 @@ declare(strict_types=1);
  *
  */
 
+use connection\PanoptoClient;
+use connection\PanoptoLTIHandler;
+use ILIAS\DI\Exceptions\Exception;
 use platform\PanoptoConfig;
+use utils\DTO\ContentObject;
+use utils\DTO\Session;
+use ILIAS\UI\Factory;
 
 /**
- * Class ppcoVideoFormGUI
+ * Class UploadVideoGUI
  *
  * @authors Jesús Copado, Daniel Cazalla, Saúl Díaz, Juan Aguilar <info@surlabs.es>
  */
-class ppcoVideoFormGUI extends ilPropertyFormGUI {
+class UploadVideoGUI {
 
     /**
      * @var ilLanguage
@@ -47,23 +53,62 @@ class ppcoVideoFormGUI extends ilPropertyFormGUI {
     protected mixed $properties;
 
     /**
-     * ppcoVideoFormGUI constructor.
-     * @throws ilCtrlException
+     * @var ilGlobalTemplateInterface
      */
-    public function __construct(ilPanoptoPageComponentPluginGUI $parent_gui, $properties = array()) {
-        parent::__construct();
+    protected ilGlobalTemplateInterface $tpl;
 
+    /**
+     * @var ilCtrl
+     */
+    protected ilCtrl $ctrl;
+
+    /**
+     * @var Factory
+     */
+    protected Factory $factory;
+
+    /**
+     * @throws ilException
+     */
+    public function render($parent, $properties = array()): \ILIAS\UI\Component\Legacy\Legacy
+    {
         global $DIC;
+        $this->tpl = $DIC->ui()->mainTemplate();
+        $this->ctrl = $DIC->ctrl();
+        $this->parent_gui = $parent;
+
         $this->lng = $DIC->language();
-        $this->id = 'xpan_embed';
+//        $this->id = 'xpan_embed';
         $this->pl = ilPanoptoPageComponentPlugin::getInstance();
         $this->properties = $properties;
-        $this->setTitle($this->pl->txt('video_form_title'));
+        $this->factory = $DIC->ui()->factory();
 
-        $this->parent_gui = $parent_gui;
+        return self::createContentObject();
 
-        $this->setFormAction($DIC->ctrl()->getFormAction($parent_gui));
-        $this->initForm();
+    }
+
+
+    /**
+     * @throws ilException
+     */
+    public function createContentObject(): \ILIAS\UI\Component\Legacy\Legacy
+    {
+
+        try {
+            $url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/Pages/Sessions/EmbeddedUpload.aspx?playlistsEnabled=true';
+            $onclick = "if(typeof(xpan_modal_opened) === 'undefined') { xpan_modal_opened = true; $('#xpan_iframe').attr('src', '" . $url . "');}"; // this avoids a bug in firefox (iframe source must be loaded on opening modal)
+            $onclick .= "$('#ilContentContainer .modal-dialog').addClass('modal-lg').css('width', '100%').css('max-width', '800px');";
+            $onclick .= "$('#ilContentContainer .modal').modal('show');";
+
+            $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
+
+            return $field_add_video;
+
+
+        } catch(Exception $e){
+            throw new ilException($e->getMessage());
+        }
+
     }
 
     protected function initForm(): void
