@@ -22,7 +22,9 @@ declare(strict_types=1);
 use connection\PanoptoClient;
 use connection\PanoptoLTIHandler;
 use ILIAS\DI\Exceptions\Exception;
+use ILIAS\UI\Component\Legacy\Legacy;
 use platform\PanoptoConfig;
+use platform\PanoptoException;
 use utils\DTO\ContentObject;
 use utils\DTO\Session;
 use ILIAS\UI\Factory;
@@ -68,9 +70,9 @@ class UploadVideoGUI {
     protected Factory $factory;
 
     /**
-     * @throws ilException
+     * @throws ilException|PanoptoException
      */
-    public function render($parent, $properties = array()): \ILIAS\UI\Component\Legacy\Legacy
+    public function render($parent, $properties = array()): string
     {
         global $DIC;
         $this->tpl = $DIC->ui()->mainTemplate();
@@ -89,20 +91,33 @@ class UploadVideoGUI {
 
 
     /**
-     * @throws ilException
+     * @throws ilException|PanoptoException
      */
-    public function createContentObject(): \ILIAS\UI\Component\Legacy\Legacy
+    public function createContentObject(): string
     {
 
         try {
+            global $DIC;
+            $renderer = $DIC->ui()->renderer();
+            $this->tpl->addOnLoadCode('setLenguage("'.$this->pl->txt('video').'", "'.$this->pl->txt('max_video_width').'");');
+            $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/manage.css');
+
+            $this->ctrl->setParameterByClass('ilPanoptoPageComponentPluginGUI', 'cmd', 'create');
+
             $url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/Pages/Sessions/EmbeddedUpload.aspx?playlistsEnabled=true';
             $onclick = "if(typeof(xpan_modal_opened) === 'undefined') { xpan_modal_opened = true; $('#xpan_iframe').attr('src', '" . $url . "');}"; // this avoids a bug in firefox (iframe source must be loaded on opening modal)
             $onclick .= "$('#ilContentContainer .modal-dialog').addClass('modal-lg').css('width', '100%').css('max-width', '800px');";
             $onclick .= "$('#ilContentContainer .modal').modal('show');";
 
-            $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
+            $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button class='ppco_add_button' id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
 
-            return $field_add_video;
+//            $createButton = $this->factory->button()->primary($this->lng->txt('create'), $this->ctrl->getLinkTargetByClass('ilPanoptoPageComponentPluginGUI', 'create'));
+//            $cancelButton = $this->factory->button()->standard($this->lng->txt('cancel'), $this->ctrl->getLinkTargetByClass('ilPanoptoPageComponentPluginGUI', 'cancel'));
+            $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
+            $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI');
+            $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);
+
+            return $renderer->render($field_add_video) . $renderer->render($form);
 
 
         } catch(Exception $e){

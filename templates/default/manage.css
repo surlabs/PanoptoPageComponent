@@ -1,0 +1,20 @@
+.ppco_add_button{
+    width: 100%;
+    text-align: center;
+    font-size:20px;
+    background: #ececec;
+    padding: 20px 5px;
+    border-radius: 10px;
+    border:2px dashed #dcdcdc;
+    transition:0.3s ease-in-out background-color;
+    color: #525252;
+    font-weight: 600;
+    margin-bottom:10px;
+}
+
+.ppco_add_button:hover{
+    background: #e0e0e0;
+}
+.il-standard-form-header{
+    display: none;
+}

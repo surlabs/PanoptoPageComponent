@@ -100,10 +100,11 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $messageBox = $f->messageBox()->success($this->pl->txt("msg_choose_videos"));
         $renderer = $DIC->ui()->renderer();
         $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/ppco.js');
+
         $form = $this->uploadVideoGUI->render($this);
         $this->tpl->addJavaScript("./Services/UIComponent/Modal/js/Modal.js");
 
-        $this->tpl->setContent($renderer->render($messageBox) . $this->getModal() . $renderer->render($form));
+        $this->tpl->setContent($renderer->render($messageBox) . $this->getModal() . $form);
     }
 
     /**
@@ -115,17 +116,15 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->tpl->setContent($form->getHTML());
     }
 
+
     /**
      * @throws ilCtrlException
      */
     public function create(): void
     {
+
         if (empty($_POST['session_id']) || empty($_POST['max_width']) || empty($_POST['is_playlist'])) {
-            global $DIC;
-            $factory = $DIC->ui()->factory();
-            $renderer = $DIC->ui()->renderer();
-            $factory->messageBox()->failure($this->pl->txt('msg_no_video'));
-            //TODO: Revisar si este messageBox funciona
+
             $this->ctrl->redirect($this, 'insert');
         }
 
@@ -140,7 +139,6 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
                 'is_playlist' => $is_playlists[$i]
             ));
         }
-        //TODO: Revisar si este redirect está funcionando.
         $this->returnToParent();
     }
 
@@ -181,7 +179,6 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     public function cancel(): void
     {
         $this->returnToParent();
-        //TODO: Revisar si este redirect está funcionando.
 
     }
 
