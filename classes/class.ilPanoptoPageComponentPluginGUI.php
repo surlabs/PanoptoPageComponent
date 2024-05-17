@@ -23,7 +23,6 @@ declare(strict_types=1);
 use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
 use connection\PanoptoLTIHandler;
-use League\OAuth1\Client as OAuth1;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
 
@@ -77,13 +76,13 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
     public function executeCommand(): void
     {
+
         try {
             $cmd = $this->ctrl->getCmd();
             $this->$cmd();
 
         } catch (ilCtrlException $e) {
             new PanoptoException($e->getMessage(), $e->getCode(), $e);
-            //TODO: Revisar si esto funciona
         }
     }
 
@@ -109,11 +108,18 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
     /**
      * @throws ilCtrlException
+     * @throws PanoptoException|ilException
+     * @throws Exception
      */
     public function edit(): void
     {
-//        $form = new ppcoVideoFormGUI($this, $this->getProperties());
-        $this->tpl->setContent($form->getHTML());
+        $this->client->synchronizeCreatorPermissions();
+
+        $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/ppco.js');
+
+        $form = $this->uploadVideoGUI->render($this, $this->getProperties());
+
+        $this->tpl->setContent($this->getModal() . $form);
     }
 
 
@@ -184,18 +190,10 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
     function update(): bool
     {
-        $form = new ppcoVideoFormGUI($this, $this->getProperties());
-        $form->setValuesByPost();
-
-        if (!$form->checkInput()) {
-            $this->tpl->setContent($form->getHTML());
-            // return;
-        }
-
         $this->updateElement(array(
-            'id' => $_POST['id'],
-            'max_width' => $_POST['max_width'],
-            'is_playlist' => $_POST['is_playlist'],
+            'id' => $_POST['session_id'][0],
+            'max_width' => $_POST['max_width'][0],
+            'is_playlist' => $_POST['is_playlist'][0],
         ));
 
         $this->returnToParent();
@@ -217,5 +215,10 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
 
         return $renderer->render($modal);
+    }
+
+    public function delete(){
+        dump("Hola");
+        exit;
     }
 }

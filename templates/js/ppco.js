@@ -1,41 +1,43 @@
 let videoTag = "Video";
 let maxWidthTag = "Maximale Breite in %";
-$(document).ready(function () {
-    let get_new_form_groups = function(id, index, embedString, isPlaylist) {
-        let form_groups = `<div class="panel panel-primary panel-flex" bis_skin_checked="1">
+
+let get_new_form_groups = function(id, index, embedString, isPlaylist, maxWidth=50){
+    let form_groups = `<div class="panel panel-primary panel-flex" bis_skin_checked="1">
             <div class="panel-heading ilHeader" bis_skin_checked="1">
             <h2>${videoTag}</h2> 
             
             </div>
             <div class="panel-body" bis_skin_checked="1">`;
 
-        form_groups += '<input type="hidden" class="xpan_form_element" name="session_id[]" value="'+id+'">';
-        form_groups += '<input type="hidden" class=xpan_form_element" name="is_playlist[]" value="' + (isPlaylist ? 1 : 0) + '">';
+    form_groups += '<input type="hidden" class="xpan_form_element" name="session_id[]" value="'+id+'">';
+    form_groups += '<input type="hidden" class=xpan_form_element" name="is_playlist[]" value="' + (isPlaylist ? 1 : 0) + '">';
 
-        form_groups += '<div class="form-group xpan_form_element" id="il_prop_cont_embed_'+index+'">';
+    form_groups += '<div class="form-group xpan_form_element" id="il_prop_cont_embed_'+index+'">';
 
-        form_groups += '<div class="col-sm-12">';
-        form_groups += '<div class="form_inline">';
-        form_groups += embedString;
-        form_groups += '</div>';
-        form_groups += '</div>';
-        form_groups += '</div>';
+    form_groups += '<div class="col-sm-12">';
+    form_groups += '<div class="form_inline">';
+    form_groups += embedString;
+    form_groups += '</div>';
+    form_groups += '</div>';
+    form_groups += '</div>';
 
-        form_groups += '<div class="form-group xpan_form_element" id="il_prop_cont_max_width_'+index+'"  style="margin-top:10px;">';
-        form_groups += '<h2 class="col-sm-12 control-label">'+maxWidthTag+'<span class="asterisk">*</span></h2>';
-        form_groups += '<div class="col-sm-12">';
-        form_groups += '<div class="form_inline">';
-        form_groups += '<input style="text-align:right;width:auto;" class="form-control" type="text" size="10" id="max_width_'+index+'" maxlength="200" name="max_width[]" required="required" value="50">';
-        form_groups += '<div class="help-block"></div>';
-        form_groups += '</div>';
-        form_groups += '</div>';
-        form_groups += '</div>';
-        form_groups += '</div>';
-        form_groups += '</div>';
+    form_groups += '<div class="form-group xpan_form_element" id="il_prop_cont_max_width_'+index+'"  style="margin-top:10px;">';
+    form_groups += '<h2 class="col-sm-12 control-label">'+maxWidthTag+'<span class="asterisk">*</span></h2>';
+    form_groups += '<div class="col-sm-12">';
+    form_groups += '<div class="form_inline">';
+    form_groups += '<input style="text-align:right;width:auto;" class="form-control" type="text" size="10" id="max_width_'+index+'" maxlength="200" name="max_width[]" required="required" value="'+maxWidth+'">';
+    form_groups += '<div class="help-block"></div>';
+    form_groups += '</div>';
+    form_groups += '</div>';
+    form_groups += '</div>';
+    form_groups += '</div>';
+    form_groups += '</div>';
 
 
-        return form_groups;
-    };
+    return form_groups;
+};
+$(document).ready(function () {
+
 
     let iframe = $('#xpan_iframe'),
         iframe_src = iframe.attr('src'),
@@ -119,4 +121,11 @@ $(document).ready(function () {
 function setLenguage(video, max_width) {
     videoTag = video;
     maxWidthTag = max_width;
+}
+
+function addIframe(id, hostname, isPlaylist, maxWidth) {
+    let embedString = "<iframe class='xpan_form_element' id='iframe_"+id+"' src='https://" + hostname + "/Panopto/Pages/Embed.aspx?" +
+        (isPlaylist ? "pid=" : "id=") + id + "&v=1' width='450' height='256' frameborder='0' allowfullscreen></iframe>";
+    let form_groups = get_new_form_groups(id, id, embedString, isPlaylist, maxWidth);
+    $(form_groups).insertAfter($('.il-standard-form-header'));
 }
