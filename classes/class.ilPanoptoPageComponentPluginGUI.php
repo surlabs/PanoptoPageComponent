@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
+use connection\PanoptoLog;
 use connection\PanoptoLTIHandler;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
@@ -163,7 +164,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
             }
         } catch (Exception $e) {
             // exception could mean that the session was deleted. The embed player will display an appropriate message
-//            xpanLog::getInstance()->logError($e->getCode(), 'Could not grant viewer access: ' . $e->getMessage());
+            PanoptoLog::getInstance()->logError($e->getCode(), 'Could not grant viewer access: ' . $e->getMessage());
         }
 
         $return = "<div class='ppco_iframe_container_".$a_properties['id']."' style='width:" . $a_properties['max_width'] . "%; height: 'max-content';></div>";
