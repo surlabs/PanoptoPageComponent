@@ -18,7 +18,6 @@ declare(strict_types=1);
  * info@surlabs.es
  *
  */
-//require_once __DIR__ . '/../vendor/autoload.php';
 
 use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
@@ -62,7 +61,6 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
     /**
      * ilPanoptoPageComponentPluginGUI constructor.
-     * @throws ilCtrlException
      */
     public function __construct() {
         parent::__construct();
@@ -167,17 +165,30 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
             PanoptoLog::getInstance()->logError($e->getCode(), 'Could not grant viewer access: ' . $e->getMessage());
         }
 
-        $return = "<div class='ppco_iframe_container_".$a_properties['id']."' style='width:" . $a_properties['max_width'] . "%; height: 'max-content';></div>";
 
+        $randomId = uniqid();
+
+        $return = "<div class='ppco_iframe_container' id='ppco_iframe_container_".$randomId."' style='width:" . $a_properties['max_width'] . "%; height: 'max-content';></div>";
+        $size_props = "";
         if (!isset($a_properties['max_width'])) { // legacy
             $size_props = "width:" . $a_properties['width'] . "px; height:" . $a_properties['height'] . "px;";
             $return = "<div class='ppco_iframe_container' style='" . $size_props . "'></div>";
+        } else {
+            $size_props = "width:" . $a_properties['max_width'] . "%;";
         }
 
         $DIC->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/js/launcher.js');
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
-        $DIC->ui()->mainTemplate()->addOnLoadCode('addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
-        $DIC->ui()->mainTemplate()->addOnLoadCode('addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", '.$a_properties['is_playlist'].')' );
+        $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
+
+        if($this->ctrl->getCmd() == ''){
+            $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", '.$a_properties['is_playlist'].', "'.$randomId.'")' );
+        } else {
+            $return = "<div class='ppco_iframe_container' style='" . $size_props . "'>
+                <iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?" . ($a_properties['is_playlist'] ? "p" : "") . "id=".$a_properties['id']."&v=1' style='width:100%; aspect-ratio: 16/9'></iframe>
+           </div>";
+
+        }
 
 
         return $return;
@@ -218,8 +229,4 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         return $renderer->render($modal);
     }
 
-    public function delete(){
-        dump("Hola");
-        exit;
-    }
 }

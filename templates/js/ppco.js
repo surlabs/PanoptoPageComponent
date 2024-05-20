@@ -54,9 +54,6 @@ $(document).ready(function () {
 
     // Listen to message from child iframe
     eventEnter(messageEvent, function (e) {
-        // console.log(e);
-
-        //Comprobamos si e.data es JSON y si no lo se, lo parseamos:
         try {
             e.data = JSON.parse(e.data);
         }

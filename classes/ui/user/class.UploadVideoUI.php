@@ -19,14 +19,8 @@ declare(strict_types=1);
  *
  */
 
-use connection\PanoptoClient;
-use connection\PanoptoLTIHandler;
-use ILIAS\DI\Exceptions\Exception;
-use ILIAS\UI\Component\Legacy\Legacy;
 use platform\PanoptoConfig;
 use platform\PanoptoException;
-use utils\DTO\ContentObject;
-use utils\DTO\Session;
 use ILIAS\UI\Factory;
 
 /**
@@ -70,9 +64,9 @@ class UploadVideoGUI {
     protected Factory $factory;
 
     /**
-     * @throws ilException|PanoptoException
+     * @throws ilException
      */
-    public function render($parent, $properties = array()): string
+    public function render($parent, $properties = array(), $onManage = false): string
     {
         global $DIC;
         $this->tpl = $DIC->ui()->mainTemplate();
@@ -84,15 +78,15 @@ class UploadVideoGUI {
         $this->properties = $properties;
         $this->factory = $DIC->ui()->factory();
 
-        return self::createContentObject();
+        return self::createContentObject($onManage);
 
     }
 
 
     /**
-     * @throws ilException|PanoptoException
+     * @throws ilException
      */
-    public function createContentObject(): string
+    public function createContentObject($onManage): string
     {
         global $DIC;
         $renderer = $DIC->ui()->renderer();
@@ -124,8 +118,9 @@ class UploadVideoGUI {
 
             }
 
-        } catch(Exception $e){
-            throw new ilException($e->getMessage());
+        } catch(PanoptoException $e){
+            $messageBox = $this->factory->messageBox()->failure($e->getMessage());
+            return $renderer->render($messageBox);
         }
 
     }
