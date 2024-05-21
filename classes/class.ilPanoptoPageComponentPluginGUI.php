@@ -19,7 +19,6 @@ declare(strict_types=1);
  *
  */
 
-use classes\ui\user\UserContentMainUI;
 use connection\PanoptoClient;
 use connection\PanoptoLog;
 use connection\PanoptoLTIHandler;
@@ -148,7 +147,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     }
 
     /**
-     * @throws PanoptoException
+     * @throws PanoptoException|ilLogException
      */
     public function getElementHTML(string $a_mode, array $a_properties, string $plugin_version): string
     {
