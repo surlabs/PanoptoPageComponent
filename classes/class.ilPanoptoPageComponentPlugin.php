@@ -36,10 +36,6 @@ class ilPanoptoPageComponentPlugin extends ilPageComponentPlugin {
         return "PanoptoPageComponent";
     }
 
-    public function getCssFiles($a_mode): array
-    {
-        return ['templates/default/page.css'];
-    }
     public static function getInstance() : ilPlugin
     {
         GLOBAL $DIC;
