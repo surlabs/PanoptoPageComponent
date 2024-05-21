@@ -32,7 +32,6 @@ const panoptoLauncher = {
     },
     addVideo : function (id, host, isPlaylist, randomId) {
         setTimeout(()=>{
-            const randomId2 = Math.floor(Math.random() * 1000000);
             $("#ppco_iframe_container_"+randomId).append(`
         <iframe src='https://${host}/Panopto/Pages/Embed.aspx?${isPlaylist ? 'p' : ''}id=${id}&v=1' frameborder='0' allowfullscreen style='width:100%;aspect-ratio: 16/9'></iframe>`)   ;
             if(!this.videos.some(video => video[1] === randomId)){
