@@ -33,35 +33,35 @@ class UploadVideoGUI {
     /**
      * @var ilLanguage
      */
-    protected ilLanguage $lng;
+    protected $lng;
 
     /**
      * @var ilPanoptoPageComponentPluginGUI
      */
-    protected ilPanoptoPageComponentPluginGUI $parent_gui;
+    protected $parent_gui;
     /**
      * @var ilPanoptoPageComponentPlugin
      */
-    protected ilPlugin $pl;
+    protected $pl;
     /**
      * @var array
      */
-    protected mixed $properties;
+    protected $properties;
 
     /**
      * @var ilGlobalTemplateInterface
      */
-    protected ilGlobalTemplateInterface $tpl;
+    protected $tpl;
 
     /**
      * @var ilCtrl
      */
-    protected ilCtrl $ctrl;
+    protected $ctrl;
 
     /**
      * @var Factory
      */
-    protected Factory $factory;
+    protected $factory;
 
     /**
      * @throws ilException
@@ -101,19 +101,17 @@ class UploadVideoGUI {
                 $onclick .= "$('#ilContentContainer .modal').modal('show');";
 
                 $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button class='ppco_add_button' id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
-                $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
                 $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI', "create");
-                $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);
+                $form = $this->factory->input()->container()->form()->standard($form_action, []);
                 return $renderer->render($field_add_video) . $renderer->render($form);
 
 
             } else {
-                $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
                 $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI', 'update');
 
                 $this->tpl->addOnLoadCode("addIframe('".$this->properties['id']."', '".PanoptoConfig::get('hostname')."', ".$this->properties['is_playlist'].", ".$this->properties['max_width'].");");
 
-                $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);
+                $form = $this->factory->input()->container()->form()->standard($form_action, []);
                 return $renderer->render($form);
 
             }

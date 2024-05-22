@@ -149,7 +149,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     /**
      * @throws PanoptoException|ilLogException
      */
-    public function getElementHTML(string $a_mode, array $a_properties, string $plugin_version): string
+    public function getElementHTML($a_mode, array $a_properties, $plugin_version)
     {
         global $DIC;
 

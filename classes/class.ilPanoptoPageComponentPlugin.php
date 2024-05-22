@@ -25,6 +25,7 @@ declare(strict_types=1);
  * @ilCtrl_isCalledBy ilPanoptoPageComponentPluginGUI
  */
 class ilPanoptoPageComponentPlugin extends ilPageComponentPlugin {
+    protected static $instance;
 
     function isValidParentType($a_type): bool
     {
@@ -38,10 +39,11 @@ class ilPanoptoPageComponentPlugin extends ilPageComponentPlugin {
 
     public static function getInstance() : ilPlugin
     {
-        GLOBAL $DIC;
-        /** @var ilComponentFactory $component_factory */
-        $component_factory = $DIC["component.factory"];
-        return $component_factory->getPlugin('ppco');
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+        }
+
+        return self::$instance;
     }
 
 }
