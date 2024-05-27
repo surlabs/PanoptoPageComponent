@@ -5,7 +5,7 @@
 	</picture>
 </div>
 
-# Panopto Repository Object Plugin for ILIAS 7
+# Panopto Page Component Plugin for ILIAS 7
 This plugin allows users to embed Panopto videos in ILIAS as Page Component objects
 
 ## Installation & Update
