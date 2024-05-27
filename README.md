@@ -5,7 +5,7 @@
 	</picture>
 </div>
 
-# Panopto Repository Object Plugin for ILIAS 7
+# Panopto Page Component Plugin for ILIAS 9
 This plugin allows users to embed Panopto videos in ILIAS as Page Component objects
 
 ## Installation & Update
@@ -14,13 +14,19 @@ This plugin allows users to embed Panopto videos in ILIAS as Page Component obje
 This Page Component plugin requires the Panopto Repository Object plugin (https://github.com/surlabs/Panopto) properly installed and configured in your ILIAS platform to be used
 
 ### Installation steps
-1. Create subdirectories, if necessary for Customizing/global/plugins/Services/COPage/PageComponent/
-2. In Customizing/global/plugins/Services/COPage/PageComponent/ **ensure you delete any previous PanoptoPageComponent folder**
-3. Then, execute:
+1. Create subdirectories, if necessary for Customizing/global/plugins/Services/COPage/PageComponent/ or run the following script fron the ILIAS root
+   
+```bash
+mkdir -p Customizing/global/plugins/Services/COPage/PageComponent
+cd Customizing/global/plugins/Services/COPage/PageComponent
+```
+
+3. In Customizing/global/plugins/Services/COPage/PageComponent/ **ensure you delete any previous PanoptoPageComponent folder**
+4. Then, execute:
 
 ```bash
 git clone https://github.com/surlabs/PanoptoPageComponent.git
-git checkout ilias7
+git checkout ilias9
 ```
 
 Ensure you run composer install at platform root before you install/update the plugin
@@ -32,6 +38,8 @@ Run ILIAS update script at platform root
 ```bash
 php setup/setup.php update
 ```
+
+**Ensure you don't ignore plugins at the ilias .gitignore files and don't use --no-plugins option at ILIAS setup**
  
 # Authors
 * A previous version of this plugin was developed and maintained by Fluxlabs, and it is no longer maintained.
