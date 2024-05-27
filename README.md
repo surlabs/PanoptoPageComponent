@@ -11,11 +11,11 @@ This plugin allows users to embed Panopto videos in ILIAS as Page Component obje
 ## Installation & Update
 
 ### Software Requirements
-This Page Component plugin requires the Panopto Repository Object plugin (https://github.com/surlabs/Panopto) properly installed and configured in your ILIAS platform to be executed properly
+This Page Component plugin requires the Panopto Repository Object plugin (https://github.com/surlabs/Panopto) properly installed and configured in your ILIAS platform to be used
 
 ### Installation steps
 1. Create subdirectories, if necessary for Customizing/global/plugins/Services/COPage/PageComponent/
-2. In Customizing/global/plugins/Services/COPage/PageComponent/ **ensure you delete any previous Panopto folder**
+2. In Customizing/global/plugins/Services/COPage/PageComponent/ **ensure you delete any previous PanoptoPageComponent folder**
 3. Then, execute:
 
 ```bash
