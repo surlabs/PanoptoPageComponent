@@ -51,5 +51,5 @@ php setup/setup.php update
 # Version History
 * The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias9**
 * The version 8.x.x for **ILIAS 8** developed and maintained by SURLABS can be found in the Github branch **ilias8**
-* The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias7**
+* The version 7.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias7**
 * The previous plugin versions for ILIAS <8 is archived. It can be found in https://github.com/fluxapps/PanoptoPageComponent
