@@ -34,6 +34,11 @@ Ensure you run composer install at platform root before you install/update the p
 composer install --no-dev
 ```
 
+Ensure you run npm install at any code change within your ILIAS9 platform
+```bash
+npm install
+```
+
 Run ILIAS update script at platform root
 ```bash
 php setup/setup.php update
