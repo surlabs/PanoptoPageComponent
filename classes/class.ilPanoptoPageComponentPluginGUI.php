@@ -95,6 +95,11 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->client->synchronizeCreatorPermissions();
         $f = $DIC->ui()->factory();
         $messageBox = $f->messageBox()->success($this->pl->txt("msg_choose_videos"));
+
+        $DIC->ui()->mainTemplate()->addJavaScript($this->pl->getDirectory() . '/templates/js/launcher.js');
+        $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
+        $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
+        
         $renderer = $DIC->ui()->renderer();
         $this->tpl->addJavaScript($this->pl->getDirectory() . '/templates/js/ppco.js');
 
