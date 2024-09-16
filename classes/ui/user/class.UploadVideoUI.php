@@ -46,7 +46,7 @@ class UploadVideoGUI {
     /**
      * @var array
      */
-    protected mixed $properties;
+    protected array $properties = [];
 
     /**
      * @var ilGlobalTemplateInterface
