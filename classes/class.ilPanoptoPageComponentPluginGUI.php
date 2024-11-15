@@ -172,6 +172,10 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
 
         $randomId = uniqid();
 
+        if(!isset($a_properties['max_width'])) {
+            $a_properties['max_width'] = 100;
+        }
+
         $return = "<div class='ppco_iframe_container' id='ppco_iframe_container_".$randomId."' style='width:" . $a_properties['max_width'] . "%; height: 'max-content';></div>";
         $size_props = "";
         if (!isset($a_properties['max_width'])) { // legacy
