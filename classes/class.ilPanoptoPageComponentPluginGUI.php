@@ -158,8 +158,14 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     {
         global $DIC;
 
+        $isPlaylist = false;
+			
+		if(isset($a_properties['is_playlist'])) {
+			$isPlaylist = $a_properties['is_playlist'] === "1";
+		}
+        
         try {
-            if ($a_properties['is_playlist']) {
+            if ($isPlaylist) {
                 $this->client->grantViewerAccessToPlaylistFolder($a_properties['id']);
             } else {
                 $this->client->grantViewerAccessToSession($a_properties['id']);
@@ -190,14 +196,13 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
 
         if($this->ctrl->getCmd() == ''){
-            $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", '.$a_properties['is_playlist'].', "'.$randomId.'")' );
+            $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", "'.$isPlaylist.'", "'.$randomId.'")' );
         } else {
             $return = "<div class='ppco_iframe_container' style='" . $size_props . "'>
-                <iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?" . ($a_properties['is_playlist'] ? "p" : "") . "id=".$a_properties['id']."&v=1' style='width:100%; aspect-ratio: 16/9'></iframe>
+                <iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?" . ($isPlaylist ? "p" : "") . "id=".$a_properties['id']."&v=1' style='width:100%; aspect-ratio: 16/9'></iframe>
            </div>";
 
         }
-
 
         return $return;
     }
