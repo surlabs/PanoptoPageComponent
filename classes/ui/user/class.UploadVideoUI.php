@@ -111,7 +111,9 @@ class UploadVideoGUI {
                 $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
                 $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI', 'update');
 
-                $this->tpl->addOnLoadCode("addIframe('".$this->properties['id']."', '".PanoptoConfig::get('hostname')."', ".$this->properties['is_playlist'].", ".$this->properties['max_width'].");");
+                $is_playlist = $this->properties['is_playlist'] ?? "0";
+
+                $this->tpl->addOnLoadCode("addIframe('".$this->properties['id']."', '".PanoptoConfig::get('hostname')."', ". $is_playlist .", ".$this->properties['max_width'].");");
 
                 $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);
                 return $renderer->render($form);
