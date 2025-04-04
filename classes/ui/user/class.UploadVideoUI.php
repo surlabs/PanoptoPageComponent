@@ -112,8 +112,9 @@ class UploadVideoGUI {
                 $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI', 'update');
 
                 $is_playlist = $this->properties['is_playlist'] ?? "0";
+                $max_width = $this->properties['max_width'] ?? 100;
 
-                $this->tpl->addOnLoadCode("addIframe('".$this->properties['id']."', '".PanoptoConfig::get('hostname')."', ". $is_playlist .", ".$this->properties['max_width'].");");
+                $this->tpl->addOnLoadCode("addIframe('".$this->properties['id']."', '".PanoptoConfig::get('hostname')."', ". $is_playlist .", ". $max_width .");");
 
                 $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);
                 return $renderer->render($form);
