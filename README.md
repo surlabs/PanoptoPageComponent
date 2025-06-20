@@ -1,9 +1,5 @@
-<div alt style="text-align: center; transform: scale(.5);">
-	<picture>
-		<source media="(prefers-color-scheme: dark)" srcset="https://github.com/surlabs/PanoptoPageComponent/blob/ilias8/templates/GitBannerPCPanopto2.png" />
-		<img alt="Panopto Page Component" src="https://github.com/surlabs/PanoptoPageComponent/blob/ilias8/templates/GitBannerPCPanopto2.png" />
-	</picture>
-</div>
+![PanoptoPC](https://github.com/user-attachments/assets/f2cd80c3-610f-48e5-8d73-081364b962be)
+
 
 # Panopto Page Component Plugin for ILIAS 9
 This plugin allows users to embed Panopto videos in ILIAS as Page Component objects
