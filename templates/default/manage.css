@@ -15,6 +15,6 @@
 .ppco_add_button:hover{
     background: #e0e0e0;
 }
-.il-standard-form-header{
-    display: none;
+.c-form__header{
+    display: none !important;
 }

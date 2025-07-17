@@ -46,7 +46,7 @@ $(document).ready(function () {
         eventMethod = window.addEventListener ? 'addEventListener' : 'attachEvent',
         eventEnter = window[eventMethod],
         messageEvent = eventMethod === 'attachEvent' ? 'onmessage' : 'message',
-        choose_videos_link = $('.il-standard-form-header');
+        choose_videos_link = $('.c-form__header');
 
     //Hide insert button initially, until a video is selected
     insert_button.prop('disabled', true);
@@ -101,7 +101,7 @@ $(document).ready(function () {
                 // add new form elements (iframe + max_width)
                 $(get_new_form_groups(ids[i], i, embedString, isPlaylist)).insertAfter(choose_videos_link);
             }
-            $('#ilContentContainer .modal').modal('hide')
+            $('#xpan_iframe').closest('dialog').get(0).close();
         }
     }, false);
 
@@ -124,5 +124,5 @@ function addIframe(id, hostname, isPlaylist, maxWidth) {
     let embedString = "<iframe class='xpan_form_element' id='iframe_"+id+"' src='https://" + hostname + "/Panopto/Pages/Embed.aspx?" +
         (isPlaylist ? "pid=" : "id=") + id + "&v=1' width='450' height='256' frameborder='0' allowfullscreen></iframe>";
     let form_groups = get_new_form_groups(id, id, embedString, isPlaylist, maxWidth);
-    $(form_groups).insertAfter($('.il-standard-form-header'));
+    $(form_groups).insertAfter($('.c-form__header'));
 }
