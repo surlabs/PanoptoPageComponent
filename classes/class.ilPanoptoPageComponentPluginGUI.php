@@ -58,11 +58,6 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     protected UploadVideoGUI $uploadVideoGUI;
 
     /**
-     * @var ilPanoptoPlugin
-     */
-    protected ilPanoptoPlugin $il_panopto_plugin;
-
-    /**
      * ilPanoptoPageComponentPluginGUI constructor.
      */
     public function __construct() {
@@ -71,7 +66,6 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->ctrl = $DIC->ctrl();
         $this->tpl = $DIC->ui()->mainTemplate();
         $this->pl = ilPanoptoPageComponentPlugin::getInstance();
-        $this->il_panopto_plugin = ilPanoptoPlugin::getInstance();
         $this->client = PanoptoClient::getInstance();
         $this->uploadVideoGUI = new UploadVideoGUI();
 
@@ -101,12 +95,12 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $f = $DIC->ui()->factory();
         $messageBox = $f->messageBox()->success($this->pl->txt("msg_choose_videos"));
 
-        $DIC->ui()->mainTemplate()->addJavaScript($this->il_panopto_plugin->getDirectory().'/templates/js/launcher.js');
+        $DIC->ui()->mainTemplate()->addJavaScript($this->getDirectory().'/templates/js/launcher.js');
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
         $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
         
         $renderer = $DIC->ui()->renderer();
-        $this->tpl->addJavaScript($this->il_panopto_plugin->getDirectory() . '/templates/js/ppco.js');
+        $this->tpl->addJavaScript($this->getDirectory() . '/templates/js/ppco.js');
 
         $form = $this->uploadVideoGUI->render($this);
         $this->tpl->addJavaScript("./assets/js/modal.min.js");
@@ -123,7 +117,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
     {
         $this->client->synchronizeCreatorPermissions();
 
-        $this->tpl->addJavaScript($this->il_panopto_plugin->getDirectory().'/templates/js/ppco.js');
+        $this->tpl->addJavaScript($this->getDirectory().'/templates/js/ppco.js');
 
         $form = $this->uploadVideoGUI->render($this, $this->getProperties());
         $this->tpl->setContent($this->getModal() . $form);
@@ -195,7 +189,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
             $size_props = "width:" . $a_properties['max_width'] . "%;";
         }
 
-        $DIC->ui()->mainTemplate()->addJavaScript($this->il_panopto_plugin->getDirectory() . '/templates/js/launcher.js');
+        $DIC->ui()->mainTemplate()->addJavaScript($this->getDirectory() . '/templates/js/launcher.js');
         $launch_url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/BasicLTI/BasicLTILanding.aspx';
         $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
 
@@ -244,6 +238,15 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
 
         return $renderer->render($modal);
+    }
+
+    /**
+     * Returns the directory of the plugin
+     * @return string
+     */
+    private function getDirectory(): string
+    {
+        return '/Customizing/global/plugins/Services/COPage/PageComponent/PanoptoPageComponent';
     }
 
 }
