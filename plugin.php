@@ -2,7 +2,7 @@
 
 $id = 'ppco';
 
-$version = '9.0.4';
+$version = '10.0.0';
 
 $ilias_min_version = '10.0';
 $ilias_max_version = '10.999';
