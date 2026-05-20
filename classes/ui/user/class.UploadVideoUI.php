@@ -91,14 +91,14 @@ class UploadVideoGUI {
         global $DIC;
         $renderer = $DIC->ui()->renderer();
         $this->tpl->addOnLoadCode('setLenguage("'.$this->pl->txt('video').'", "'.$this->pl->txt('max_video_width').'");');
-        $this->tpl->addCss('Customizing/global/plugins/Services/COPage/PageComponent/PanoptoPageComponent/templates/default/manage.css');
+        $this->tpl->addCss($this->pl->getDirectory() . '/templates/default/manage.css');
 
         try {
             if(!$this->properties){
                 $url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/Pages/Sessions/EmbeddedUpload.aspx?playlistsEnabled=true';
                 $onclick = "if(typeof(xpan_modal_opened) === 'undefined') { xpan_modal_opened = true; $('#xpan_iframe').attr('src', '" . $url . "');}"; // this avoids a bug in firefox (iframe source must be loaded on opening modal)
                 $onclick .= "$('#ilContentContainer .modal-dialog').addClass('modal-lg').css('width', '100%').css('max-width', '800px');";
-                $onclick .= "il.UI.modal.showModal($('#xpan_iframe').closest('dialog').get(0), {}, {id: 'panopto-video-modal'});";
+                $onclick .= "$('#ilContentContainer .modal').modal('show');";
 
                 $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button class='ppco_add_button' id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
                 $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
