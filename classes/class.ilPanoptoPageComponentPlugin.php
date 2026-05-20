@@ -43,4 +43,5 @@ class ilPanoptoPageComponentPlugin extends ilPageComponentPlugin {
         $component_factory = $DIC["component.factory"];
         return $component_factory->getPlugin('ppco');
     }
+
 }
