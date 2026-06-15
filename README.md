@@ -22,7 +22,7 @@ cd Customizing/global/plugins/Services/COPage/PageComponent
 
 ```bash
 git clone https://github.com/surlabs/PanoptoPageComponent.git
-git checkout ilias9
+git checkout release_9
 ```
 
 Ensure you run composer install at platform root before you install/update the plugin
@@ -42,7 +42,9 @@ composer install --no-dev
 - SIG Panopto [Forum](https://docu.ilias.de/goto_docu_frm_13755.html)
 
 # Version History
-* The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias9**
-* The version 8.x.x for **ILIAS 8** developed and maintained by SURLABS can be found in the Github branch **ilias8**
-* The version 7.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **ilias7**
-* The previous plugin versions for ILIAS <8 is archived. It can be found in https://github.com/fluxapps/PanoptoPageComponent
+* The version 11.x.x for **ILIAS 11** developed and maintained by SURLABS can be found in the Github branch **dev_11**
+* The version 10.x.x for **ILIAS 10** developed and maintained by SURLABS can be found in the Github branch **release_10**
+* The version 9.x.x for **ILIAS 9** developed and maintained by SURLABS can be found in the Github branch **release_9**
+* The version 8.x.x for **ILIAS 8** developed and maintained by SURLABS can be found in the Github branch **release_8**
+* The version 7.x.x for **ILIAS 7** developed and maintained by SURLABS can be found in the Github branch **release_7**
+* The previous plugin versions for ILIAS <8 is archived. It can be found in https://github.com/fluxapps/Panopto
