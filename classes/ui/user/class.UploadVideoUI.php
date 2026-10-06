@@ -100,7 +100,7 @@ class UploadVideoGUI {
                 $onclick .= "$('#ilContentContainer .modal-dialog').addClass('modal-lg').css('width', '100%').css('max-width', '800px');";
                 $onclick .= "il.UI.modal.showModal($('#xpan_iframe').closest('dialog').get(0), {}, {id: 'panopto-video-modal'});";
 
-                $field_add_video = $this->factory->legacy("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button class='ppco_add_button' id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
+                $field_add_video = $this->factory->legacy()->content("<h1>".$this->pl->txt('video_form_title')."</h1>"."<button class='ppco_add_button' id='il_prop_cont_xpan_choose_videos_link' onclick=\"" . $onclick . "\">".$this->pl->txt('choose_videos')."</button>");
                 $inputHidden = $this->factory->input()->field()->hidden()->withLabel($this->pl->txt('hidden'));
                 $form_action = $DIC->ctrl()->getFormActionByClass('ilPanoptoPageComponentPluginGUI', "create");
                 $form = $this->factory->input()->container()->form()->standard($form_action, [$inputHidden]);

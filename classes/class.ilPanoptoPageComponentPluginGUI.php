@@ -233,7 +233,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $factory = $DIC->ui()->factory();
         $renderer = $DIC->ui()->renderer();
         $url = 'https://' . PanoptoConfig::get('hostname') . '/Panopto/Pages/Sessions/EmbeddedUpload.aspx?playlistsEnabled=true';
-        $message = $factory->legacy('<iframe id="xpan_iframe" style="background-size: contain;width: 650px;height: 500px;border: unset;" src="'.$url.'"></iframe>');
+        $message = $factory->legacy()->content('<iframe id="xpan_iframe" style="background-size: contain;width: 650px;height: 500px;border: unset;" src="'.$url.'"></iframe>');
         $modal = $factory->modal()->roundtrip('', $message)->withActionButtons([$factory->button()->primary($this->pl->txt('choose_videos'), "#")->withAriaLabel('insert')]);
         $this->tpl->addOnLoadCode('$("#lti_form").submit();');
 
