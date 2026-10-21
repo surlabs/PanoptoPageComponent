@@ -196,7 +196,7 @@ class ilPanoptoPageComponentPluginGUI extends ilPageComponentPluginGUI {
         $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addForm('.PanoptoLTIHandler::launchToolPageComponent().', "'.$launch_url.'", "'.PanoptoConfig::get('hostname').'")' );
 
         if($this->ctrl->getCmd() == ''){
-            $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", "'.$isPlaylist.'", "'.$randomId.'")' );
+            $DIC->ui()->mainTemplate()->addOnLoadCode('panoptoLauncher.addVideo("'.$a_properties['id'].'", "'.PanoptoConfig::get('hostname').'", "'.$isPlaylist.'", "'.$randomId.'", '.json_encode($this->pl->txt('open_in_panopto')).')' );
         } else {
             $return = "<div class='ppco_iframe_container' style='" . $size_props . "'>
                 <iframe src='https://" . PanoptoConfig::get('hostname') . "/Panopto/Pages/Embed.aspx?" . ($isPlaylist ? "p" : "") . "id=".$a_properties['id']."&v=1' style='width:100%; aspect-ratio: 16/9'></iframe>
